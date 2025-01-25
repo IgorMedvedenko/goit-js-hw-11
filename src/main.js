@@ -1,18 +1,28 @@
-import { searchImages } from './pixabay-api.js';
+import { searchImages } from './js/pixabay-api.js';
 import {
   renderImages,
   clearGallery,
   showLoader,
   hideLoader,
-} from './render-functions.js';
+} from './js/render-functions.js';
 
 document.addEventListener('DOMContentLoaded', () => {
   const searchForm = document.querySelector('.search-form');
+  const searchInput = document.querySelector('.search-input');
+
+  searchInput.addEventListener('focus', () => {
+    searchInput.classList.add('pressed');
+    searchInput.classList.remove('hover');
+  });
+
+  searchInput.addEventListener('blur', () => {
+    searchInput.classList.remove('pressed');
+  });
 
   searchForm.addEventListener('submit', async event => {
     event.preventDefault();
 
-    const searchInput = event.target.elements.searchInput;
+    // const searchInput = event.target.elements.searchInput;
     const query = searchInput.value.trim();
 
     if (!query) {
@@ -30,6 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
     } finally {
       hideLoader();
       searchInput.value = '';
+      searchInput.classList.remove('pressed');
     }
   });
 });

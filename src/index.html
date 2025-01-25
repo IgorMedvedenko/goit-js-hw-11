@@ -8,21 +8,35 @@
     <link rel="stylesheet" href="./css/styles.css" />
   </head>
   <body>
-    <main>
-      <div class="search-container">
-        <input
-          class="search-inpt"
-          type="text"
-          id="srch-inpt"
-          placeholder="Search images..."
-          required
-        />
-        <button class="btn" type="button" data-start disabled>Search</button>
+    <div class="container">
+      <h1>Image Search</h1>
 
-        <ul class="gallery js-gallery"></ul>
+      <form class="search-form" id="search-form">
+        <div class="form-wrapper">
+          <input
+            type="text"
+            name="searchInput"
+            autocomplete="off"
+            placeholder="Search images..."
+            class="search-input pressed"
+          />
+          <button type="submit" class="search-button">Search</button>
+        </div>
+      </form>
+
+      <div class="loader-container">
+        <div class="loader is-hidden">
+          <div class="loader-spinner"></div>
+        </div>
       </div>
-    </main>
+
+      <div class="gallery-container">
+        <ul class="gallery"></ul>
+      </div>
+    </div>
 
     <script type="module" src="./main.js"></script>
   </body>
 </html>
+
+<span class="loader"></span>
