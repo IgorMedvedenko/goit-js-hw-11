@@ -3,38 +3,60 @@ import 'simplelightbox/dist/simple-lightbox.min.css';
 import iziToast from 'izitoast';
 import 'izitoast/dist/css/iziToast.min.css';
 
-export function createGalleryMarkup(images) {
-  const li = document.createElement(`li`);
-  li.classList.add(`gallery-item`);
-  const a = document.createElement(`a`);
-  a.classList.add(`gallery-link`);
-  a.href = image.original;
-  const img = document.createElement(`img`);
-  img.classList.add(`gallery-image`);
-  img.src = image.preview;
-  img.alt = image.description;
-  li.appendChild(a);
-  a.appendChild(img);
+let lightbox;
 
-  return li;
+export function clearGallery() {
+  const gallery = document.querySelector('.gallery');
+  gallery.innerHTML = '';
 }
-const fragment = document.createDocumentFragment();
-images.forEach(image => {
-  const li = createImageMarkup(image);
-  fragment.appendChild(li);
-});
-gallery.appendChild(fragment);
 
-new SimpleLightbox('.gallery a', {
-  captionDelay: 250,
-  captionsData: `alt`,
-  captionPosition: `bottom`,
-});
+export function renderImages(images) {
+  const gallery = document.querySelector('.gallery');
 
-export function showMessage(message, type = 'error') {
-  iziToast[type]({
-    title: 'Повідомлення',
-    message,
-    position: 'topRight',
+  if (images.length === 0) {
+    iziToast.error({
+      title: 'Error',
+      message:
+        'Sorry, there are no images matching your search query. Please try again!',
+    });
+    return;
+  }
+
+  const imageMarkup = images
+    .map(
+      image => `
+    <a href="${image.largeImageURL}" class="gallery-link">
+      <div class="gallery-item">
+        <img src="${image.webformatURL}" alt="${image.tags}" />
+        <div class="image-info">
+          <p>Likes: ${image.likes}</p>
+          <p>Views: ${image.views}</p>
+          <p>Comments: ${image.comments}</p>
+          <p>Downloads: ${image.downloads}</p>
+        </div>
+      </div>
+    </a>
+  `
+    )
+    .join('');
+
+  gallery.insertAdjacentHTML('beforeend', imageMarkup);
+
+  if (lightbox) {
+    lightbox.destroy();
+  }
+  lightbox = new SimpleLightbox('.gallery a', {
+    captionsData: 'alt',
+    captionDelay: 250,
   });
+}
+
+export function showLoader() {
+  const loader = document.querySelector('.loader');
+  loader.style.display = 'block';
+}
+
+export function hideLoader() {
+  const loader = document.querySelector('.loader');
+  loader.style.display = 'none';
 }

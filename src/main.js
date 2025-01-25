@@ -1,36 +1,35 @@
-import { fetchImages } from './pixabay-api.js';
-import { createGalleryMarkup, showMessage } from './render-functions.js';
+import { searchImages } from './pixabay-api.js';
+import {
+  renderImages,
+  clearGallery,
+  showLoader,
+  hideLoader,
+} from './render-functions.js';
 
-const searchForm = document.querySelector('.search-form');
-const searchInput = document.querySelector('.search-input');
-const gallery = document.querySelector('.gallery');
-const loader = document.querySelector('.loader');
+document.addEventListener('DOMContentLoaded', () => {
+  const searchForm = document.querySelector('.search-form');
 
-searchForm.addEventListener('submit', async event => {
-  event.preventDefault();
-  const searchQuery = searchInput.value.trim();
+  searchForm.addEventListener('submit', async event => {
+    event.preventDefault();
 
-  if (!searchQuery) {
-    showMessage('Будь ласка, введіть запит для пошуку');
-    return;
-  }
+    const searchInput = event.target.elements.searchInput;
+    const query = searchInput.value.trim();
 
-  loader.classList.add('is-active');
-  gallery.innerHTML = '';
-
-  try {
-    const images = await fetchImages(searchQuery);
-    if (images.length === 0) {
-      showMessage(
-        'Sorry, there are no images matching your search query. Please try again!'
-      );
-    } else {
-      gallery.insertAdjacentHTML('beforeend', createGalleryMarkup(images));
-      new SimpleLightbox('.gallery a');
+    if (!query) {
+      return;
     }
-  } catch (error) {
-    showMessage('Виникла помилка при пошуку зображень');
-  } finally {
-    loader.classList.remove('is-active');
-  }
+
+    clearGallery();
+    showLoader();
+
+    try {
+      const images = await searchImages(query);
+      renderImages(images);
+    } catch (error) {
+      console.error('Search error:', error);
+    } finally {
+      hideLoader();
+      searchInput.value = '';
+    }
+  });
 });
