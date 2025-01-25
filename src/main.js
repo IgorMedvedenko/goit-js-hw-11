@@ -12,7 +12,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   searchInput.addEventListener('focus', () => {
     searchInput.classList.add('pressed');
-    searchInput.classList.remove('hover');
   });
 
   searchInput.addEventListener('blur', () => {
@@ -22,7 +21,6 @@ document.addEventListener('DOMContentLoaded', () => {
   searchForm.addEventListener('submit', async event => {
     event.preventDefault();
 
-    // const searchInput = event.target.elements.searchInput;
     const query = searchInput.value.trim();
 
     if (!query) {
